@@ -1,9 +1,9 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
     provided 'com.yuvimasory:orange-extensions:1.3.0'   // OSX support
     compile project(':api')
-    runtime project(':services')
+    api project(':services')
 }
 
 version = parent.version

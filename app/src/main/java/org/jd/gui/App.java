@@ -35,12 +35,11 @@ public class App {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> persister.save(configuration)));
 
             if ("true".equals(configuration.getPreferences().get(SINGLE_INSTANCE))) {
-                InterProcessCommunicationUtil ipc = new InterProcessCommunicationUtil();
                 try {
-                    ipc.listen(receivedArgs -> controller.openFiles(newList(receivedArgs)));
+                    InterProcessCommunicationUtil.listen(receivedArgs -> controller.openFiles(newList(receivedArgs)));
                 } catch (Exception notTheFirstInstanceException) {
                     // Send args to main windows and exit
-                    ipc.send(args);
+                    InterProcessCommunicationUtil.send(args);
                     System.exit(0);
                 }
             }
