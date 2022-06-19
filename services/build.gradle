@@ -3,7 +3,7 @@ apply plugin: 'java'
 dependencies {
     implementation 'com.fifesoft:rsyntaxtextarea:3.0.4'
     implementation 'org.ow2.asm:asm:9.3'
-    implementation 'org.jd:jd-core:' + parent.jdCoreVersion
+    implementation 'com.github.Jacocococo:jd-core:' + parent.jdCoreVersion
     implementation project(':api')
     testImplementation 'junit:junit:4.12'
 }
