@@ -277,6 +277,8 @@ public abstract class AbstractTypeFactoryProvider implements TypeFactory {
             return INTERFACE_ICONS[accessToIndex(access)];
         else if ((access & Type.FLAG_ENUM) != 0)
             return ENUM_ICON;
+        else if ((access & Type.FLAG_RECORD) != 0)
+            return RECORD_ICON;
         else
             return CLASS_ICONS[accessToIndex(access)];
     }
@@ -361,6 +363,7 @@ public abstract class AbstractTypeFactoryProvider implements TypeFactory {
 
     protected static final ImageIcon ANNOTATION_ICON = new ImageIcon(ClassFileTypeFactoryProvider.class.getClassLoader().getResource("org/jd/gui/images/annotation_obj.png"));
     protected static final ImageIcon ENUM_ICON = new ImageIcon(ClassFileTypeFactoryProvider.class.getClassLoader().getResource("org/jd/gui/images/enum_obj.png"));
+    protected static final ImageIcon RECORD_ICON = new ImageIcon(ClassFileTypeFactoryProvider.class.getClassLoader().getResource("org/jd/gui/images/record_obj.png"));
 
     protected static final ImageIcon FIELD_ICON = new ImageIcon(ClassFileTypeFactoryProvider.class.getClassLoader().getResource("org/jd/gui/images/field_default_obj.png"));
     protected static final ImageIcon PUBLIC_FIELD_ICON = new ImageIcon(ClassFileTypeFactoryProvider.class.getClassLoader().getResource("org/jd/gui/images/field_public_obj.png"));

@@ -21,6 +21,7 @@ public interface Type {
     int FLAG_ABSTRACT = 1024;
     int FLAG_ANNOTATION = 8192;
     int FLAG_ENUM = 16384;
+    int FLAG_RECORD = 65536;
 
     int getFlags();
 
