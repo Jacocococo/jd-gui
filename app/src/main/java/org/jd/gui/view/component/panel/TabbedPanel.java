@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.Map;
 
 public class TabbedPanel<T extends JComponent & UriGettable> extends JPanel implements PreferencesChangeListener {
-	protected static final ImageIcon CLOSE_ICON = new ImageIcon(TabbedPanel.class.getClassLoader().getResource("org/jd/gui/images/close.gif"));
-    protected static final ImageIcon  CLOSE_ACTIVE_ICON = new ImageIcon(TabbedPanel.class.getClassLoader().getResource("org/jd/gui/images/close_active.gif"));
+    protected static final ImageIcon CLOSE_ICON = new ImageIcon(TabbedPanel.class.getClassLoader().getResource("org/jd/gui/images/close.gif"));
+    protected static final ImageIcon CLOSE_ACTIVE_ICON = new ImageIcon(TabbedPanel.class.getClassLoader().getResource("org/jd/gui/images/close_active.gif"));
 
     protected static final String TAB_LAYOUT = "UITabsPreferencesProvider.singleLineTabs";
 
@@ -35,14 +35,14 @@ public class TabbedPanel<T extends JComponent & UriGettable> extends JPanel impl
 
     public TabbedPanel(API api) {
         this.api = api;
-		create();
-	}
+        create();
+    }
 
     protected void create() {
-		setLayout(cardLayout = new CardLayout());
-		add("panel", new JPanel());
-		add("tabs", tabbedPane = createTabPanel());
-	}
+        setLayout(cardLayout = new CardLayout());
+        add("panel", new JPanel());
+        add("tabs", tabbedPane = createTabPanel());
+    }
 
     protected JTabbedPane createTabPanel() {
         JTabbedPane tabPanel = new JTabbedPane() {
@@ -57,7 +57,16 @@ public class TabbedPanel<T extends JComponent & UriGettable> extends JPanel impl
         };
         ToolTipManager.sharedInstance().registerComponent(tabPanel);
         tabPanel.addMouseListener(new MouseAdapter() {
-            @Override public void mousePressed(MouseEvent e) { showPopupTabMenu(e); }
+            @Override public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON2) {
+                    int index = tabPanel.indexAtLocation(e.getX(), e.getY());
+                    if (index != -1) {
+                        removeComponent(tabPanel.getComponentAt(index));
+                    }
+                } else {
+                    showPopupTabMenu(e);
+                }
+            }
             @Override public void mouseReleased(MouseEvent e) { showPopupTabMenu(e); }
             protected void showPopupTabMenu(MouseEvent e) {
                 if (e.isPopupTrigger()) {
@@ -69,15 +78,15 @@ public class TabbedPanel<T extends JComponent & UriGettable> extends JPanel impl
             }
         });
         return tabPanel;
-	}
+    }
 
     protected static Color darker(Color c) {
-		return new Color(
-			Math.max((int)(c.getRed()  *0.85), 0),
-			Math.max((int)(c.getGreen()*0.85), 0),
-			Math.max((int)(c.getBlue() *0.85), 0),
-			c.getAlpha());
-	}
+        return new Color(
+            Math.max((int)(c.getRed()  *0.85), 0),
+            Math.max((int)(c.getGreen()*0.85), 0),
+            Math.max((int)(c.getBlue() *0.85), 0),
+            c.getAlpha());
+    }
 
     public void addPage(String title, Icon icon, String tip, T page) {
         // Add a new tab
@@ -91,21 +100,21 @@ public class TabbedPanel<T extends JComponent & UriGettable> extends JPanel impl
             @Override public void mouseClicked(MouseEvent e) { removeComponent(page); }
         });
 
-		JPanel tab = new JPanel(new BorderLayout());
+        JPanel tab = new JPanel(new BorderLayout());
         tab.setBorder(BorderFactory.createEmptyBorder(2, 0, 3, 0));
-		tab.setOpaque(false);
+        tab.setOpaque(false);
         tab.setToolTipText(tip);
         tab.add(new JLabel(title, icon, JLabel.LEADING), BorderLayout.CENTER);
-		tab.add(tabCloseButton, BorderLayout.EAST);
+        tab.add(tabCloseButton, BorderLayout.EAST);
         ToolTipManager.sharedInstance().unregisterComponent(tab);
 
-		int index = tabbedPane.getTabCount();
-		tabbedPane.addTab(title, page);
+        int index = tabbedPane.getTabCount();
+        tabbedPane.addTab(title, page);
         tabbedPane.setTabComponentAt(index, tab);
         setSelectedIndex(index);
 
         cardLayout.show(this, "tabs");
-	}
+    }
 
     protected void setSelectedIndex(int index) {
         if (index != -1) {
