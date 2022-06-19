@@ -181,7 +181,7 @@ public class MainView<T extends JComponent & UriGettable> implements UriOpenable
             Action saveAllSourcesAction = newAction("Save All Sources", newImageIcon("/org/jd/gui/images/save_all.png"), false, saveAllSourcesActionListener);
             Action exitAction = newAction("Exit", true, "Quit this program", exitActionListener);
             Action copyAction = newAction("Copy", newImageIcon("/org/jd/gui/images/copy.png"), false, copyActionListener);
-            Action pasteAction = newAction("Paste Log", newImageIcon("/org/jd/gui/images/paste.png"), true, pasteActionListener);
+            Action pasteAction = newAction("Paste Log/File", newImageIcon("/org/jd/gui/images/paste.png"), true, pasteActionListener);
             Action selectAllAction = newAction("Select all", false, selectAllActionListener);
             Action findAction = newAction("Find...", false, findActionListener);
             openTypeAction = newAction("Open Type...", newImageIcon("/org/jd/gui/images/open_type.png"), false, openTypeActionListener);

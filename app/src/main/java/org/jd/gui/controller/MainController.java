@@ -52,6 +52,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class MainController implements API {
     protected Configuration configuration;
@@ -113,11 +114,11 @@ public class MainController implements API {
                 page -> onCurrentPageChanged((JComponent)page),
                 file -> openFile((File)file));
         });
-	}
+    }
 
-	// --- Show GUI --- //
+    // --- Show GUI --- //
     @SuppressWarnings("unchecked")
-	public void show(List<File> files) {
+    public void show(List<File> files) {
         SwingUtil.invokeLater(() -> {
             // Show main frame
             mainView.show(configuration.getMainWindowLocation(), configuration.getMainWindowSize(), configuration.isMainWindowMaximize());
@@ -167,7 +168,7 @@ public class MainController implements API {
         SourceSaverService.getInstance();
     }
 
-	// --- Actions --- //
+    // --- Actions --- //
     protected void onOpen() {
         Map<String, FileLoader> loaders = FileLoaderService.getInstance().getMapProviders();
         StringBuilder sb = new StringBuilder();
@@ -199,7 +200,7 @@ public class MainController implements API {
             configuration.setRecentLoadDirectory(chooser.getCurrentDirectory());
             openFile(chooser.getSelectedFile());
         }
-	}
+    }
 
     protected void onClose() {
         mainView.closeCurrentTab();
@@ -276,16 +277,22 @@ public class MainController implements API {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void onPaste() {
         try {
             Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 
-            if ((transferable != null) && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-                Object obj = transferable.getTransferData(DataFlavor.stringFlavor);
-                PasteHandler pasteHandler = PasteHandlerService.getInstance().get(obj);
+            if ((transferable != null)) {
+                if(transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                    Object obj = transferable.getTransferData(DataFlavor.stringFlavor);
+                    PasteHandler pasteHandler = PasteHandlerService.getInstance().get(obj);
 
-                if (pasteHandler != null) {
-                    pasteHandler.paste(this, obj);
+                    if (pasteHandler != null) {
+                        pasteHandler.paste(this, obj);
+                    }
+                } else if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor) ) {
+                    List<File> files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+                    openFiles(files);
                 }
             }
         } catch (Exception e) {
