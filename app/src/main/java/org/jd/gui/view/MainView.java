@@ -24,10 +24,13 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
@@ -330,6 +333,38 @@ public class MainView<T extends JComponent & UriGettable> implements UriOpenable
             });
             mainTabbedPanel.preferencesChanged(configuration.getPreferences());
             panel.add(mainTabbedPanel, BorderLayout.CENTER);
+
+            Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+                public void eventDispatched(AWTEvent e) {
+                    if (e instanceof MouseEvent event
+                            && event.getID() == MouseEvent.MOUSE_PRESSED) {
+                        switch (event.getButton()) {
+                            case 4 -> {
+                                if (backwardAction.isEnabled()) {
+                                    ActionEvent actionEvent = new ActionEvent(
+                                            event.getSource(),
+                                            ActionEvent.ACTION_PERFORMED,
+                                            "Back",
+                                            event.getWhen(),
+                                            event.getModifiers());
+                                    backwardActionListener.actionPerformed(actionEvent);
+                                }
+                            }
+                            case 5 -> {
+                                if (forwardAction.isEnabled()) {
+                                    ActionEvent actionEvent = new ActionEvent(
+                                            event.getSource(),
+                                            ActionEvent.ACTION_PERFORMED,
+                                            "Forward",
+                                            event.getWhen(),
+                                            event.getModifiers());
+                                    forwardActionListener.actionPerformed(actionEvent);
+                                }
+                            }
+                        }
+                    }
+                }
+            }, AWTEvent.MOUSE_EVENT_MASK);
 
             panel.add(findPanel, BorderLayout.PAGE_END);
             mainFrame.add(panel);
